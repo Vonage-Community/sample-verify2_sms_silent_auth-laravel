@@ -13,16 +13,17 @@ Requirements:
 ## Installation
 
 1. Install PHP dependencies in the terminal with `composer install`
-2. Boot up Sail in the terminal with `./vendor/bin/sail up -d`
-3. Run migrations in the terminal with `./vendor/bin/sail artisan migrate`
-4. Run the database seeder in the terminal with `./vendor/bin/sail artisan db:seed`
-5. Install JavaScript dependencies with `./vendor/bin/sail yarn install`
-6. Run frontend server with `./vendor/bin/sail yarn run dev`
-7. Create a new application instance in the Vonage API Dashboard
-8. Download your private key for your new application ID and place it in the root directory of this project.
-9. Create a new .env file by copying the example across in the terminal `cp .env.example .env`
-10. Add your application ID to the `VONAGE_APPLICATION_ID` environment variable
-11. Change your `VONAGE_PRIVATE_KEY_PATH` variable to read like this: `VONAGE_PRIVATE_KEY_PATH="./private.key"`
+2. Create a new .env file by copying the example across in the terminal `cp .env.example .env`
+3. Boot up Sail in the terminal with `./vendor/bin/sail up -d`
+4. Run migrations in the terminal with `./vendor/bin/sail artisan migrate` and create the sqlite db
+5. Run the database seeder in the terminal with `./vendor/bin/sail artisan db:seed`
+6. Install JavaScript dependencies with `./vendor/bin/sail yarn install`
+7. Run frontend server with `./vendor/bin/sail yarn run dev`
+8. Create an application key with `./vendor/bin/sail artisan key:generate`
+9. Create a new application instance in the Vonage API Dashboard
+10. Download your private key for your new application ID and place it in the root directory of this project.
+11. Add your application ID to the `VONAGE_APPLICATION_ID` environment variable
+12. Change your `VONAGE_PRIVATE_KEY_PATH` variable to read like this: `VONAGE_PRIVATE_KEY_PATH="./private.key"`
 
 ## Usage
 

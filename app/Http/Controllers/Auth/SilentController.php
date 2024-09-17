@@ -12,6 +12,7 @@ use Illuminate\Foundation\Application;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Routing\Redirector as RedirectorAlias;
+use Illuminate\Support\Env;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Session;
@@ -26,8 +27,8 @@ class SilentController extends Controller
     public function __construct()
     {
         $credentials = new Client\Credentials\Keypair(
-            file_get_contents(base_path(env('VONAGE_PRIVATE_KEY_PATH'))),
-            env('VONAGE_APPLICATION_ID')
+            file_get_contents(base_path(config('vonage.privateKey'))),
+            config('vonage.applicationId')
         );
 
         $this->vonageClient = new Client($credentials);
