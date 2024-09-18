@@ -24,8 +24,8 @@ class SmsController extends Controller
     public function __construct()
     {
         $credentials = new Client\Credentials\Keypair(
-            file_get_contents(base_path(env('VONAGE_PRIVATE_KEY_PATH'))),
-            env('VONAGE_APPLICATION_ID')
+            file_get_contents(base_path(config('vonage.privateKey'))),
+            config('vonage.applicationId')
         );
 
         $this->vonageClient = new Client($credentials);

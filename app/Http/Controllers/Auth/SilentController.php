@@ -48,12 +48,10 @@ class SilentController extends Controller
 
         try {
             $response = $this->vonageClient->verify2()->startVerification($twoFactorRequest);
-        } catch (Client\Exception\Request $e) {
+        } catch (\Exception $e) {
             Log::error($e->getMessage());
-            if ($e->getCode() === ResponseAlias::HTTP_CONFLICT) {
-                Log::error('409, redirecting to SMS');
-                return redirect(route('sms'));
-            }
+            Log::error('Error, redirecting to SMS');
+            return redirect(route('sms'));
         }
 
         $request->session()->put('request_id', $response['request_id']);
