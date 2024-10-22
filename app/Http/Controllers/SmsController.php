@@ -33,11 +33,17 @@ class SmsController extends Controller
 
     public function start(Request $request): Application|View|Factory|Redirector|ApplicationContract|RedirectResponse
     {
-        $phoneNumber = $request->session()->get('phone_number');
-        $smsRequest = new SMSRequest($phoneNumber, 'VONAGE');
+        $requestId = $request->session()->get('request_id');
+        Log::info('Got request ID ' . $requestId);
+
+        if (!$requestId) {
+            Log::error('Did not find a request ID');
+            $request->session()->flash('error', 'You have attempted 2FA too many times, please wait');
+            return redirect(route('login'));
+        }
 
         try {
-            $response = $this->vonageClient->verify2()->startVerification($smsRequest);
+            $this->vonageClient->verify2()->nextWorkflow($requestId);
         } catch (Client\Exception\Request $e) {
             Log::error($e->getMessage());
             if ($e->getCode() === 409) {
@@ -46,8 +52,6 @@ class SmsController extends Controller
                 return redirect(route('login'));
             }
         }
-
-        Session::put('request_id', $response['request_id']);
 
         return view('auth/sms');
     }

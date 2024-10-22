@@ -19,6 +19,7 @@ use Illuminate\Support\Facades\Session;
 use Symfony\Component\HttpFoundation\Response as ResponseAlias;
 use Vonage\Client;
 use Vonage\Verify2\Request\SilentAuthRequest;
+use Vonage\Verify2\VerifyObjects\VerificationWorkflow;
 
 class SilentController extends Controller
 {
@@ -46,12 +47,21 @@ class SilentController extends Controller
 
         $twoFactorRequest = new SilentAuthRequest($phoneNumber, 'VONAGE', $redirectUrl);
 
+        $fallbackWorkflow = new VerificationWorkflow(
+            VerificationWorkflow::WORKFLOW_SMS,
+            $phoneNumber
+        );
+
+        $twoFactorRequest->addWorkflow($fallbackWorkflow);
+
         try {
             $response = $this->vonageClient->verify2()->startVerification($twoFactorRequest);
         } catch (\Exception $e) {
-            Log::error($e->getMessage());
-            Log::error('Error, redirecting to SMS');
-            return redirect(route('sms'));
+            if ($e->getCode() === 409) {
+                Log::error('409 from Silent Auth attempt');
+                $request->session()->flash('error', 'You have attempted 2FA too many times, please wait');
+                return redirect(route('login'));
+            }
         }
 
         $request->session()->put('request_id', $response['request_id']);
